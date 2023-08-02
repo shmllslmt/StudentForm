@@ -112,6 +112,7 @@ public class StudentForm extends JFrame {
     }
 
     public void submitInfo() {
+
         // Get the student information from the text fields
         String studentNumber = studentNumberField.getText();
         String firstName = firstNameField.getText();
@@ -133,6 +134,39 @@ public class StudentForm extends JFrame {
         System.out.println("Street: " + street);
         System.out.println("Zipcode: " + zipcode);
         System.out.println("Department: " + department);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "r00tpa55word");
+
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS students (" +
+                    "ssn VARCHAR(15) PRIMARY KEY, " +
+                    "firstname VARCHAR(15), " +
+                    "lastname VARCHAR(15), " +
+                    "phone VARCHAR(15), " +
+                    "birthdate DATE, " +
+                    "street VARCHAR(250), " +
+                    "zipcode VARCHAR(5), " +
+                    "deptid VARCHAR(3), " +
+                    "CONSTRAINT fk_departments FOREIGN KEY (deptid) REFERENCES departments (deptid));");
+
+//            statement.executeUpdate("INSERT INTO students (ssn, firstname, lastname, deptid) VALUES ('"+studentNumber+"','"+firstName+"','"+lastName+"','"+department+"');");
+
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO students (ssn, firstname, lastname, deptid) VALUES (?, ?, ?, ?);");
+
+            preparedStatement.setString(1,studentNumber);
+            preparedStatement.setString(2, firstName);
+            preparedStatement.setString(3, lastName);
+            preparedStatement.setString(4, department);
+            preparedStatement.executeUpdate();
+
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
+
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
