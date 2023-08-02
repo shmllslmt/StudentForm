@@ -138,7 +138,7 @@ public class StudentForm extends JFrame {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "r00tpa55word");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", yourpasswordhere);
 
             Statement statement = connection.createStatement();
 
